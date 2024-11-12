@@ -1,0 +1,85 @@
+type Student{
+    id : ID!
+    name : String!
+    enrolledCourses :[Course!]!
+    grades : [Grade!]!
+    advisor :Teacher
+    GPA :Float
+}
+
+type Teacher{
+    id :ID!
+    name :String!
+    teachingCourses :[Course!]!
+
+    department:Department
+}
+
+type Course{
+    id :ID!
+    name :String!
+    students :[Student!]!
+    teachers :[Teacher!]!
+    grades:[Grade!]!
+    schedule :Schedule
+    cirriculum :Cirriculum
+}
+
+type Grade{
+    id :ID!
+    course :Course!
+    student :Student!
+    score:Float!
+}
+
+type Department{
+    id :ID!
+    name :String!
+    head :Teacher
+    teachers :[Teacher!]!
+    courses :[Course!]
+}
+
+type Schedule{
+    id :ID!
+    course :Course!
+    timeSlots :[Timeslot!]
+}
+
+type Timeslot{
+    id :ID!
+    start :String!
+    end :String!
+    days: String!
+}
+
+type Cirriculum{
+    id :ID!
+    courses: [Course!]!
+    requirements :String!
+}
+
+input CourseFilter {
+    teacherId:ID!
+    departmentId:ID!
+}
+type Query{
+    allCourses(filter: CourseFilter): [Course!]!
+    studentById(id: ID!): Student
+}
+input ScheduleInput {
+
+    scheduleID:ID!
+    timeSlotID:ID!
+}
+type Mutation{
+    enrollStudentInCourse(studentId: ID!, courseId: ID!): Student
+    assignGradeToStudent(courseId: ID!, studentId: ID!, score: Float!): Grade
+    scheduleCourse(courseId: ID!, scheduleInput: ScheduleInput!): Course
+    updateGPA(studentId: ID!): Student
+}
+
+
+
+
+
