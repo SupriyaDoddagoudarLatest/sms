@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class SmsApplication {
 
 	public static void main(String[] args) {
-		System.out.println("SMS is on");
+		//System.out.println("SMS is on");
 		SpringApplication.run(SmsApplication.class, args);
 	}
 
