@@ -2,7 +2,9 @@ package assignment.sms.entity;
 
 import jakarta.persistence.*;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 public class Course {
@@ -15,10 +17,13 @@ public class Course {
     @ManyToMany(mappedBy = "enrolledCourses")
     private List<Student> students;
 
-    @ManyToMany
+    @ManyToMany//(fetch = FetchType.EAGER)
+    @JoinTable(name="course_teachers",
+            joinColumns = @JoinColumn(name = "teachers_id"),
+            inverseJoinColumns = @JoinColumn(name = "teaching_courses_id"))
     private List<Teacher> teachers;
 
-    @OneToMany
+    @OneToMany//(fetch = FetchType.EAGER)
     private List<Grade> grades;
 
     @OneToOne
@@ -31,6 +36,7 @@ public class Course {
         return schedule;
     }
 
+   // boolean current ;
     public void setSchedule(Schedule schedule) {
         this.schedule = schedule;
     }
@@ -41,5 +47,18 @@ public class Course {
 
     public void setStudents(List<Student> students) {
         this.students = students;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public List<String> getStudentIds(){
+        if(students == null){
+            return Collections.emptyList();
+        }
+        return students.stream()
+                .map(Student::getId)
+                .collect(Collectors.toList());
     }
 }

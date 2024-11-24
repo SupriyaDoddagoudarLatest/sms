@@ -1,7 +1,9 @@
 package assignment.sms.entity;
 import jakarta.persistence.*;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 public class Student {
@@ -11,16 +13,22 @@ public class Student {
 
     private String name;
 
-    @ManyToMany
+    @ManyToMany//(fetch=FetchType.EAGER)
+    @JoinTable(
+            name = "student_enrolled_courses",
+            joinColumns = @JoinColumn(name = "students_id"),
+            inverseJoinColumns = @JoinColumn(name = "enrolled_courses_id"))
     private List<Course> enrolledCourses;
 
-    @OneToMany
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, fetch=FetchType.LAZY)//(fetch=FetchType.EAGER)
     private List<Grade> grades;
 
     @ManyToOne
     private Teacher advisor;
 
     private Float GPA;
+
+   // private boolean active;
 
     public String getName() {
         return name;
@@ -52,5 +60,32 @@ public class Student {
 
     public void setEnrolledCourses(List<Course> enrolledCourses) {
         this.enrolledCourses = enrolledCourses;
+    }
+
+
+    public List<String> getEnrolledCourseIds() {
+        if(enrolledCourses == null){
+            return Collections.emptyList();
+        }
+        return enrolledCourses.stream().map(Course::getId).collect(Collectors.toList());
+    }
+    public List<String> getGradeIds() {
+        if(grades == null){
+            return Collections.emptyList();
+        }
+        return grades.stream().map(Grade::getId).collect(Collectors.toList());
+    }
+
+    public String getAdvisorId() {
+        return advisor != null ? advisor.getId() : null;
+
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }
