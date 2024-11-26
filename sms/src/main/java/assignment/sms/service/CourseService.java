@@ -1,5 +1,6 @@
 package assignment.sms.service;
 
+import assignment.sms.datafetcher.CourseFilter;
 import assignment.sms.datafetcher.ScheduleInput;
 import assignment.sms.entity.Course;
 import assignment.sms.entity.Schedule;
@@ -26,10 +27,16 @@ public class CourseService {
 
     //ScheduleInput scheduleInput = new ScheduleInput();
 
-    public Iterable<Course> allCourses() {
+    /*public Iterable<Course> allCourses() {
         return courseRepository.findAll();
     }
+*/
 
+    public List<Course> getAllCourses(CourseFilter filter){
+        String teacherId=filter!=null ? filter.getTeacherId() : null;
+        String departmentId = filter != null? filter.getDepartmentId() : null;
+        return courseRepository.findCoursesByFilter(teacherId,departmentId);
+    }
 
     @Transactional
     public CompletionStage<Course> scheduleCourse(String courseId, ScheduleInput scheduleInput,
@@ -64,6 +71,6 @@ public class CourseService {
 
     @Transactional
     public List<Course> getCoursesByIds(List<String> courseIds) {
-        return courseRepository.findAllById(courseIds);
+        return courseRepository.findAllWithStudentsByIds(courseIds);
     }
 }

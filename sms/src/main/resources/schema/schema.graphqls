@@ -63,6 +63,7 @@ input CourseFilter {
     teacherId:ID!
     departmentId:ID!
 }
+
 type Query{
     allCourses(filter: CourseFilter): [Course!]!
     studentById(id: ID!): Student

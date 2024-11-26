@@ -1,4 +1,5 @@
 package assignment.sms.entity;
+import assignment.sms.datafetcher.StudentFetcher;
 import jakarta.persistence.*;
 
 import java.util.Collections;
@@ -27,8 +28,6 @@ public class Student {
     private Teacher advisor;
 
     private Float GPA;
-
-   // private boolean active;
 
     public String getName() {
         return name;
@@ -87,5 +86,13 @@ public class Student {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public Teacher getAdvisor() {
+        return advisor;
+    }
+
+    public void setAdvisor(Teacher advisor) {
+        this.advisor = advisor;
     }
 }

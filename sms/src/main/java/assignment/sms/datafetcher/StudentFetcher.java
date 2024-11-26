@@ -1,12 +1,12 @@
 package assignment.sms.datafetcher;
 import assignment.sms.dataloader.CourseDataLoader;
-import assignment.sms.dataloader.StudentDataLoader;
 import assignment.sms.entity.*;
 import assignment.sms.service.GradeService;
 import assignment.sms.service.StudentService;
 import com.netflix.graphql.dgs.*;
 import graphql.schema.DataFetchingEnvironment;
 import org.dataloader.DataLoader;
+import org.dataloader.DataLoaderRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -21,12 +21,20 @@ public class StudentFetcher {
     private GradeService gradeService;
 
     @DgsQuery
-    public CompletableFuture<Student> studentById(@InputArgument String id, DataFetchingEnvironment dfe) {
-        return CompletableFuture.supplyAsync(()->studentService.getStudentById(id));
+    public CompletionStage<Student> studentById(@InputArgument String id, DataFetchingEnvironment dfe) {
+        DataLoader<String,Student> studentDataLoader = dfe.getDataLoader("studentDataLoader");
+        return studentDataLoader.load(id);
+        //return CompletableFuture.supplyAsync(()->studentService.getStudentById(id));
     }
 
     @DgsMutation
     public CompletionStage<Student> enrollStudentInCourse(String studentId, String courseId, DgsDataFetchingEnvironment dfe) {
+        /*DataLoaderRegistry registry = dfe.getDataLoaderRegistry();
+
+        if(registry.getDataLoader("courseDataLoader")==null){
+            throw new RuntimeException("Course DataLoader is not registered in DataLoaderRegistry");
+        }*/
+
         DataLoader<String, Student> studentDataLoader = dfe.getDataLoader("studentDataLoader");
         DataLoader<String, Course> courseDataLoader = dfe.getDataLoader("courseDataLoader");
         return studentService.enrollStudentInCourse(studentId, courseId,studentDataLoader, courseDataLoader);

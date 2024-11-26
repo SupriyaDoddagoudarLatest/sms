@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
-@DgsComponent
+//Use MappedBatchLoader and check
 @DgsDataLoader(name="studentDataLoader")
 public class StudentDataLoader implements BatchLoader<String, Student> {
 
@@ -35,19 +35,4 @@ public class StudentDataLoader implements BatchLoader<String, Student> {
 
 }
 
-/*@DgsDataLoader(name = "studentDataLoader")
-@Component
-public class StudentDataLoader implements BatchLoaderWithContext<String, Student> {
 
-    @Autowired
-    private StudentRepository studentRepository;
-
-    @Override
-    public CompletionStage<List<Student>> load(List<String> studentIds, BatchLoaderEnvironment environment) {
-        return CompletableFuture.supplyAsync(
-                ()->studentRepository.findAllById(studentIds)
-
-                );
-    }
-
-}*/

@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-@DgsComponent
+
 @DgsDataLoader(name="courseDataLoader")
 public class CourseDataLoader implements BatchLoader<String,Course> {
 

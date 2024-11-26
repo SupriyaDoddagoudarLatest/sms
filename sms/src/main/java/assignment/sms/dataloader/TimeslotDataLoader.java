@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
-@DgsComponent
+
 @DgsDataLoader(name="timeslotDataLoader")
 public class TimeslotDataLoader implements BatchLoaderWithContext<String, Timeslot> {
 

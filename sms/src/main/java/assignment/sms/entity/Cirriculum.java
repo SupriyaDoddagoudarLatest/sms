@@ -15,5 +15,4 @@ public class Cirriculum {
 
     private String requirements;
 
-    // Getters and Setters
 }

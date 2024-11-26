@@ -13,7 +13,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.stream.Collectors;
 
-@DgsComponent
+
 @DgsDataLoader(name="gradeDataLoader")
 public class GradeDataLoader implements BatchLoader<String, List<Grade>> {
 

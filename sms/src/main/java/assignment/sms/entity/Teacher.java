@@ -35,4 +35,12 @@ public class Teacher {
     public String getDepartmentId() {
         return department !=null? department.getId() : null;
     }
+
+    public List<Course> getTeachingCourses() {
+        return teachingCourses;
+    }
+
+    public void setTeachingCourses(List<Course> teachingCourses) {
+        this.teachingCourses = teachingCourses;
+    }
 }

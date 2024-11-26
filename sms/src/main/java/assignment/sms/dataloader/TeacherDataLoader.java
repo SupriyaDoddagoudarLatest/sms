@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-@DgsComponent
+
 @DgsDataLoader(name="teacherLoader")
 public class TeacherDataLoader implements BatchLoader<String,Teacher> {
 
