@@ -8,12 +8,14 @@ import assignment.sms.entity.Student;
 import assignment.sms.entity.Timeslot;
 import assignment.sms.repository.CourseRepository;
 import assignment.sms.service.CourseService;
+import assignment.sms.service.ScheduleService;
 import com.netflix.graphql.dgs.*;
 import com.netflix.graphql.dgs.context.DgsContext;
 import org.dataloader.DataLoader;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.stream.Collectors;
 
@@ -22,6 +24,9 @@ public class CourseFetcher {
 
     @Autowired
     private CourseService courseService;
+
+    @Autowired
+    private ScheduleService scheduleService;
 
     @DgsQuery
     public CompletionStage<List<Course>> allCourses(@InputArgument CourseFilter filter, DgsDataFetchingEnvironment dfe) {
@@ -34,11 +39,10 @@ public class CourseFetcher {
     }
 
     @DgsMutation
-    public CompletionStage<Course> scheduleCourse(String courseId, ScheduleInput scheduleInput, DgsDataFetchingEnvironment dfe) {
-        DataLoader<String, Course> courseDataLoader = dfe.getDataLoader(CourseDataLoader.class);
-        DataLoader<String, Timeslot> timeslotDataLoader = dfe.getDataLoader(TimeslotDataLoader.class);
+    public CompletionStage<Course> scheduleCourse(@InputArgument String courseId,@InputArgument ScheduleInput scheduleInput, DgsDataFetchingEnvironment dfe) {
+        DataLoader<String, Course> courseDataLoader = dfe.getDataLoader("courseDataLoader");
 
-        return courseService.scheduleCourse(courseId, scheduleInput, courseDataLoader, timeslotDataLoader);
+        return scheduleService.scheduleCourse(courseId, scheduleInput).thenCompose(updatedSchedule -> courseDataLoader.load(courseId));
     }
 
     @DgsData(parentType = "Course", field="students")

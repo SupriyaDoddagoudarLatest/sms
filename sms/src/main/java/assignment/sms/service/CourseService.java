@@ -25,12 +25,6 @@ public class CourseService {
     @Autowired
     private ScheduleRepository scheduleRepository;
 
-    //ScheduleInput scheduleInput = new ScheduleInput();
-
-    /*public Iterable<Course> allCourses() {
-        return courseRepository.findAll();
-    }
-*/
 
     public List<Course> getAllCourses(CourseFilter filter){
         String teacherId=filter!=null ? filter.getTeacherId() : null;
@@ -38,36 +32,6 @@ public class CourseService {
         return courseRepository.findCoursesByFilter(teacherId,departmentId);
     }
 
-    @Transactional
-    public CompletionStage<Course> scheduleCourse(String courseId, ScheduleInput scheduleInput,
-                                                  DataLoader<String, Course> courseDataLoader,
-                                                  DataLoader<String, Timeslot> timeslotDataLoader) {
-
-        return courseDataLoader.load(courseId)
-                .thenCombine(timeslotDataLoader.load(scheduleInput.getTimeslotId()), (course, timeslot) -> {
-                    if (course == null) {
-                        throw new IllegalArgumentException("Course not found for ID: " + courseId);
-                    }
-
-                    if (timeslot == null) {
-                        throw new IllegalArgumentException("Timeslot not found for ID: " + scheduleInput.getTimeslotId());
-                    }
-
-                    // Create or update the Schedule
-                    Schedule schedule = scheduleRepository.findById(scheduleInput.getScheduleId())
-                            .orElse(new Schedule());
-                    schedule.setId(scheduleInput.getScheduleId());
-                    schedule.setCourse(course);
-                    schedule.setTimeSlots(List.of(timeslot));
-
-                    // Save Schedule
-                    scheduleRepository.save(schedule);
-
-                    // Attach Schedule to the Course
-                    course.setSchedule(schedule);
-                    return courseRepository.save(course); // Return the updated course
-                });
-    }
 
     @Transactional
     public List<Course> getCoursesByIds(List<String> courseIds) {

@@ -2,6 +2,7 @@ package assignment.sms.datafetcher;
 import assignment.sms.dataloader.CourseDataLoader;
 import assignment.sms.entity.*;
 import assignment.sms.service.GradeService;
+import assignment.sms.service.ScheduleService;
 import assignment.sms.service.StudentService;
 import com.netflix.graphql.dgs.*;
 import graphql.schema.DataFetchingEnvironment;
@@ -19,6 +20,9 @@ public class StudentFetcher {
 
     @Autowired
     private GradeService gradeService;
+
+    @Autowired
+    private ScheduleService scheduleService;
 
     @DgsQuery
     public CompletionStage<Student> studentById(@InputArgument String id, DataFetchingEnvironment dfe) {
@@ -100,11 +104,12 @@ public class StudentFetcher {
         return dataLoader.load(teacher.getDepartmentId());
     }
 
-    /*//Resolve schedule for Course
+    //Resolve schedule for Course
     @DgsData(parentType = "Course", field = "schedule")
     public CompletableFuture<Schedule> getSchedule(DgsDataFetchingEnvironment env) {
         Course course = env.getSource();
-        return scheduleService.getScheduleByCourseId(course.getId());
-    }*/
+        DataLoader<String, Schedule> scheduleDataLoader = env.getDataLoader("scheduleLoader");
+        return scheduleDataLoader.load(course.getId());
+    }
 
 }
